@@ -8,6 +8,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
+    "start:prod": "npm run build && npx serve -s build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
