@@ -1,7 +1,8 @@
 import React from 'react';
 
-import UserProfile from '../Profile';
-import Repos from '../Repos';
+import Loading from '../Loading';
+const UserProfile = React.lazy(() => import('../Profile'));
+const Repos = React.lazy(() => import('../Repos'));
 
 const appStyles = {
   marginTop: '50px',
@@ -45,13 +46,24 @@ class App extends React.Component {
     }
   };
 
-  onChange = e =>
-    this.setState({ searchValue: e.target.value }, () =>
-      console.log(this.state)
-    );
+  onChange = e => this.setState({ searchValue: e.target.value });
 
   onSubmit = async e => {
     e.preventDefault();
+
+    // Reset state
+    this.setState({
+      profile: {
+        data: {},
+        error: null,
+        isFetching: true
+      },
+      repos: {
+        data: [],
+        error: null,
+        isFetching: false
+      }
+    });
 
     const profileRes = await fetch(
       `https://api.github.com/users/${this.state.searchValue}`
@@ -61,7 +73,8 @@ class App extends React.Component {
       const profile = await profileRes.json();
 
       this.setState({
-        profile: { data: profile, isFetching: false, error: null }
+        profile: { data: profile, isFetching: false, error: null },
+        repos: { isFetching: true }
       });
 
       const reposRes = await fetch(profile.repos_url);
@@ -109,15 +122,21 @@ class App extends React.Component {
         </div>
         <br />
         {profileDataLoaded && (
-          <UserProfile
-            avatarURL={this.state.profile.data.avatar_url}
-            profileURL={this.state.profile.data.html_url}
-            name={this.state.profile.data.name}
-            bio={this.state.profile.data.bio}
-          />
+          <React.Suspense fallback={<Loading />}>
+            <UserProfile
+              avatarURL={this.state.profile.data.avatar_url}
+              profileURL={this.state.profile.data.html_url}
+              name={this.state.profile.data.name}
+              bio={this.state.profile.data.bio}
+            />
+          </React.Suspense>
         )}
         <br />
-        {reposDataLoaded && <Repos data={this.state.repos.data} />}
+        {reposDataLoaded && (
+          <React.Suspense fallback={<Loading />}>
+            <Repos data={this.state.repos.data} />
+          </React.Suspense>
+        )}
       </div>
     );
   }
