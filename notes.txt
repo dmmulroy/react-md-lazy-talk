@@ -1,0 +1,32 @@
+Intro Slide
+What is Code Splitting and why should you care
+- The Bundle (tm) - one giant file of all your source code concatenated together
+- - webpack, browserfiy, gulp, parcel, rollup etc
+- - grows in size as your app grows (your own source + 3rd party code)
+- - This is bad b/c it increases load time 
+- Code splitting enables splitting your bundle into multiple smaller bundles
+- In turn, it also allows for those smaller bundles to be lazily loaded (what good would requesting them all at once be?)
+- Lazy loading is not requesting those bundles from the server until they're needed
+- Pros
+- - Faster load times (especially on initial load)
+- Cons
+- - Complexity in developer tooling + code
+- - Previously extra 3rd party dependencies (react-loadable)
+React.lazy()
+- New in React 16.7 (check version)
+- Dynamic Import
+- - https://github.com/tc39/proposal-dynamic-import
+- - Supported by all major bundlers w/ babel (babel-plugin-syntax-dynamic-import)
+- - CRA supports it out of the box
+- Code Example
+A word on Suspense
+- Used for code splitting + lazy loading now, fetching data in the future
+React.lazy()
+-network requests before/after
+*Live Coding*
+Resources
+- react docs
+- tc39 proposal
+- babel
+- bundle analysis tools
+Contact
