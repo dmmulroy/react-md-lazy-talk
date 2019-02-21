@@ -1,7 +1,8 @@
 import React from 'react';
 
-import UserProfile from '../Profile';
-import Repos from '../Repos';
+import Loading from '../Loading';
+const UserProfile = React.lazy(() => import('../Profile'));
+const Repos = React.lazy(() => import('../Repos'));
 
 const appStyles = {
   marginTop: '50px',
@@ -121,15 +122,21 @@ class App extends React.Component {
         </div>
         <br />
         {profileDataLoaded && (
-          <UserProfile
-            avatarURL={this.state.profile.data.avatar_url}
-            profileURL={this.state.profile.data.html_url}
-            name={this.state.profile.data.name}
-            bio={this.state.profile.data.bio}
-          />
+          <React.Suspense fallback={<Loading />}>
+            <UserProfile
+              avatarURL={this.state.profile.data.avatar_url}
+              profileURL={this.state.profile.data.html_url}
+              name={this.state.profile.data.name}
+              bio={this.state.profile.data.bio}
+            />
+          </React.Suspense>
         )}
         <br />
-        {reposDataLoaded && <Repos data={this.state.repos.data} />}
+        {reposDataLoaded && (
+          <React.Suspense fallback={<Loading />}>
+            <Repos data={this.state.repos.data} />
+          </React.Suspense>
+        )}
       </div>
     );
   }
